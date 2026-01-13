@@ -9,6 +9,7 @@ export function Header() {
     const { user, loading, signOut } = useAuth();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
 
     return (
         <>
@@ -24,7 +25,7 @@ export function Header() {
                         <span className="text-lg font-semibold text-gray-900 tracking-tight">Vayura</span>
                     </Link>
 
-                    {/* Navigation */}
+                    {/* Desktop Navigation */}
                     <nav className="hidden md:flex items-center gap-8">
                         {user && (
                             <>
@@ -62,8 +63,25 @@ export function Header() {
                         )}
                     </nav>
 
-                    {/* Auth */}
-                    <div className="flex items-center gap-4">
+                    {/* Mobile + Auth */}
+                    <div className="flex items-center gap-3">
+                        {/* Mobile Hamburger Menu - Only show when user is logged in */}
+                        {user && (
+                            <button
+                                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                                className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                                aria-label="Toggle menu"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    {showMobileMenu ? (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    ) : (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    )}
+                                </svg>
+                            </button>
+                        )}
+
                         {loading ? (
                             <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
                         ) : user ? (
@@ -151,6 +169,95 @@ export function Header() {
                     </div>
                 </div>
             </header>
+
+            {/* Mobile Navigation Menu */}
+            {showMobileMenu && user && (
+                <>
+                    {/* Backdrop */}
+                    <div
+                        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden"
+                        onClick={() => setShowMobileMenu(false)}
+                    />
+
+                    {/* Menu Drawer */}
+                    <div className="fixed top-16 left-0 right-0 bottom-0 bg-white z-50 md:hidden overflow-y-auto shadow-2xl">
+                        <nav className="flex flex-col p-4 min-h-full">
+                            {/* Menu Header */}
+                            <div className="px-4 py-3 border-b border-gray-100">
+                                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Navigate</h3>
+                            </div>
+
+                            <div className="mt-2 space-y-1 flex-1">
+                                <Link
+                                    href="/dashboard"
+                                    onClick={() => setShowMobileMenu(false)}
+                                    className="flex items-center gap-3 px-4 py-3.5 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-all duration-200 font-medium group"
+                                >
+                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                    <span>Dashboard</span>
+                                </Link>
+
+                                <Link
+                                    href="/leaderboard"
+                                    onClick={() => setShowMobileMenu(false)}
+                                    className="flex items-center gap-3 px-4 py-3.5 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-all duration-200 font-medium group"
+                                >
+                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                    </svg>
+                                    <span>Leaderboard</span>
+                                </Link>
+
+                                <Link
+                                    href="/methodology"
+                                    onClick={() => setShowMobileMenu(false)}
+                                    className="flex items-center gap-3 px-4 py-3.5 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-all duration-200 font-medium group"
+                                >
+                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <span>Methodology</span>
+                                </Link>
+
+                                <div className="my-3 border-t border-gray-100"></div>
+
+                                <Link
+                                    href="/plant"
+                                    onClick={() => setShowMobileMenu(false)}
+                                    className="flex items-center gap-3 px-4 py-3.5 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-all duration-200 font-medium group"
+                                >
+                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                    <span>Plant a Tree</span>
+                                    <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">Action</span>
+                                </Link>
+
+                                <Link
+                                    href="/donate"
+                                    onClick={() => setShowMobileMenu(false)}
+                                    className="flex items-center gap-3 px-4 py-3.5 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-all duration-200 font-medium group"
+                                >
+                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>Donate Tree</span>
+                                    <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">Action</span>
+                                </Link>
+                            </div>
+
+                            {/* Footer Info */}
+                            <div className="pt-6 pb-4 px-4 border-t border-gray-100">
+                                <p className="text-xs text-gray-500 text-center">
+                                    Vayura - Making India Greener 🌱
+                                </p>
+                            </div>
+                        </nav>
+                    </div>
+                </>
+            )}
 
             {/* Spacer for fixed header */}
             <div className="h-16" />
