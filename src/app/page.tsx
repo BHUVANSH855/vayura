@@ -8,13 +8,14 @@ import { formatCompactNumber } from '@/lib/utils/helpers';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { AuthModal } from '@/components/ui/auth-modal';
+import { ArrowRight, Leaf, Wind, Activity, BarChart3, TreeDeciduous, ShieldCheck, Globe, Sprout } from 'lucide-react';
 
 function HomeContent() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [stats, setStats] = useState({ totalDistricts: 0, totalTrees: 0, totalOxygen: 0 });
+  const [stats, setStats] = useState({ totalDistricts: 766, totalTrees: 0, totalOxygen: 0 });
 
   // Redirect authenticated users to dashboard
   useEffect(() => {
@@ -37,7 +38,8 @@ function HomeContent() {
         const response = await fetch('/api/stats');
         if (response.ok) {
           const data = await response.json();
-          setStats(data);
+          // Keep default districts if API returns 0 or fails
+          setStats(prev => ({ ...data, totalDistricts: data.totalDistricts || prev.totalDistricts }));
         }
       } catch (error) {
         console.error('Error fetching stats:', error);
@@ -79,113 +81,109 @@ function HomeContent() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white overflow-hidden">
         {/* Hero Section */}
         <section className="relative pt-32 pb-20 px-6">
-          <div className="max-w-5xl mx-auto text-center">
-            <h1 className="text-5xl md:text-6xl font-semibold text-gray-900 mb-6 tracking-tight">
-              District Oxygen Intelligence
-            </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12 leading-relaxed">
-              Discover your district's oxygen demand, environmental health, and the trees needed to restore balance across India.
-            </p>
+          {/* Background Gradients */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-white to-white pointer-events-none" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-green-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
-            {/* CTA Button */}
-            <div className="mb-20">
-              <button
-                onClick={() => setShowAuthModal(true)}
-                className="px-8 py-3.5 bg-gray-900 text-white text-base font-medium rounded-md hover:bg-gray-800 transition-colors shadow-sm"
-              >
-                Sign In to Get Started
-              </button>
+          <div className="max-w-6xl mx-auto text-center relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 border border-green-100 text-green-700 text-sm font-medium mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <Sprout className="w-4 h-4" />
+              <span>Monitoring {stats.totalDistricts} Districts Across India</span>
             </div>
 
-            {/* Key Benefits */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-              <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 tracking-tight leading-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
+              District Oxygen <br className="hidden md:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-600">Intelligence</span>
+            </h1>
+
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+              Discover your district's environmental health with AI-powered analysis. Track oxygen demand, soil quality, and join the movement to restore balance.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="px-6 py-3 bg-gray-900 text-white text-base font-medium rounded-lg hover:bg-gray-800 transition-all hover:scale-105 shadow-lg shadow-gray-900/20 flex items-center gap-2"
+              >
+                Get Started
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <Link
+                href="/methodology"
+                className="px-6 py-3 bg-white text-gray-700 text-base font-medium rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all"
+              >
+                View Methodology
+              </Link>
+            </div>
+
+            {/* Live Stats Ticker */}
+            <div className="max-w-5xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-500">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                  <span className="text-3xl font-bold text-gray-900 mb-1">{stats.totalDistricts}</span>
+                  <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Districts</span>
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-2">All Indian Districts</h3>
-                <p className="text-sm text-gray-600">
-                  Comprehensive coverage of every district across India
-                </p>
-              </div>
-              <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                  <span className="text-3xl font-bold text-gray-900 mb-1">{formatCompactNumber(stats.totalTrees)}</span>
+                  <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Trees Planted</span>
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-2">Verified Data</h3>
-                <p className="text-sm text-gray-600">
-                  Government sources and validated environmental metrics
-                </p>
-              </div>
-              <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
+                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                  <span className="text-3xl font-bold text-gray-900 mb-1">{formatCompactNumber(stats.totalOxygen)}kg</span>
+                  <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Oxygen Added</span>
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-2">Real Impact</h3>
-                <p className="text-sm text-gray-600">
-                  Track your contributions and see measurable environmental change
-                </p>
+                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                  <span className="text-3xl font-bold text-green-600 mb-1">Live</span>
+                  <span className="text-xs text-green-600 font-medium uppercase tracking-wider">Monitoring</span>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* How It Works */}
-        <section className="py-20 bg-gray-50">
+        {/* Feature Grid */}
+        <section className="py-24 bg-gray-50/50">
           <div className="max-w-6xl mx-auto px-6">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-semibold text-gray-900 mb-3">
-                How It Works
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Why Vayura?
               </h2>
-              <p className="text-gray-500">
-                Transparent methodology powered by scientific research
+              <p className="text-gray-500 max-w-2xl mx-auto text-lg">
+                Comprehensive environmental intelligence driven by verifiable government data and advanced AI analysis.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 {
-                  step: '1',
-                  title: 'Select District',
-                  description: 'Choose any Indian district to analyze its environmental health',
+                  icon: ShieldCheck,
+                  color: 'blue',
+                  title: 'Verified Sources',
+                  desc: 'Data aggregated from CPCB, NDMA, and Census bureaus, ensuring decision-grade accuracy.'
                 },
                 {
-                  step: '2',
-                  title: 'Fetch Data',
-                  description: 'We aggregate population, AQI, soil quality, and disaster data from verified sources',
+                  icon: Activity,
+                  color: 'green',
+                  title: 'AI Analysis',
+                  desc: 'Advanced models calculate oxygen deficits and soil health scores tailored to local geography.'
                 },
                 {
-                  step: '3',
-                  title: 'Calculate Demand',
-                  description: 'Scientific formulas estimate oxygen requirements based on population and environmental factors',
-                },
-                {
-                  step: '4',
-                  title: 'Take Action',
-                  description: 'Plant trees or donate to verified NGOs to bridge the oxygen gap',
-                },
-              ].map((item) => (
-                <div
-                  key={item.step}
-                  className="bg-white rounded-lg p-6 border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all"
-                >
-                  <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-                    <span className="text-lg font-semibold text-gray-900">{item.step}</span>
+                  icon: BarChart3,
+                  color: 'purple',
+                  title: 'Real Impact',
+                  desc: 'Track every tree planted and verify its long-term environmental contribution.'
+                }
+              ].map((feature, idx) => (
+                <div key={idx} className="group bg-white rounded-2xl p-8 border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300">
+                  <div className={`w-14 h-14 bg-${feature.color}-50 rounded-2xl flex items-center justify-center text-${feature.color}-600 mb-6 group-hover:scale-110 transition-transform`}>
+                    <feature.icon className="w-7 h-7" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    {item.description}
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {feature.desc}
                   </p>
                 </div>
               ))}
@@ -193,79 +191,137 @@ function HomeContent() {
           </div>
         </section>
 
-        {/* Features Section */}
-        <section className="py-20">
+        {/* How It Works */}
+        <section className="py-24 bg-white">
           <div className="max-w-6xl mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-semibold text-gray-900 mb-3">
-                Why Vayura?
-              </h2>
-              <p className="text-gray-500">
-                Comprehensive environmental intelligence for every Indian district
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-medium mb-6">
+                  <Activity className="w-4 h-4" />
+                  <span>The Process</span>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Verified Data Sources
-                </h3>
-                <p className="text-sm text-gray-600">
-                  All data comes from government sources, validated and attributed
-                </p>
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                  From Analysis to <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-600">Restoration</span>
+                </h2>
+                <div className="space-y-12 relative">
+                  {/* Vertical Connecting Line */}
+                  <div className="absolute left-[19px] top-4 bottom-4 w-0.5 bg-gradient-to-b from-blue-200 via-purple-200 to-green-200" />
+
+                  {[
+                    {
+                      step: '01',
+                      title: 'Select District',
+                      desc: 'Choose any Indian district to view its environmental report card.',
+                      color: 'blue'
+                    },
+                    {
+                      step: '02',
+                      title: 'Analyze Deficit',
+                      desc: 'Our AI calculates the precise oxygen gap based on population and pollution.',
+                      color: 'purple'
+                    },
+                    {
+                      step: '03',
+                      title: 'Plant & Restore',
+                      desc: 'Contribute trees directly or donate to verified local NGOs.',
+                      color: 'green'
+                    },
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex gap-6 relative">
+                      <div className={`flex-shrink-0 w-10 h-10 rounded-full bg-${item.color}-50 border-2 border-${item.color}-100 text-${item.color}-600 flex items-center justify-center font-bold text-sm relative z-10 shadow-sm transition-transform hover:scale-110 bg-white`}>
+                        {item.step}
+                      </div>
+                      <div className="pt-1">
+                        <h4 className={`text-xl font-bold text-gray-900 mb-2 flex items-center gap-2 group cursor-default transition-colors hover:text-${item.color}-600`}>
+                          {item.title}
+                        </h4>
+                        <p className="text-gray-600 text-lg leading-relaxed">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Transparent Calculations
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Every formula and assumption is visible and explained
-                </p>
-              </div>
+              {/* Visual Element / Abstraction */}
+              <div className="relative group perspective-1000">
+                <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-green-100 rounded-3xl -rotate-6 transform scale-95 opacity-50 group-hover:rotate-0 transition-transform duration-500" />
+                <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl border border-white/50 shadow-2xl p-8 transform transition-all duration-500 hover:scale-[1.02]">
+                  {/* Glass highlight effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent rounded-3xl pointer-events-none" />
 
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
+                  <div className="space-y-8 relative z-10">
+                    {/* Mock Header */}
+                    <div className="flex items-center justify-between pb-6 border-b border-gray-100/50">
+                      <div>
+                        <div className="h-4 w-32 bg-gray-200 rounded mb-2 animate-pulse" />
+                        <div className="h-3 w-20 bg-gray-100 rounded animate-pulse delay-75" />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+                        <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse delay-75" />
+                        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse delay-150" />
+                      </div>
+                    </div>
+
+                    {/* Mock Content Grid */}
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="bg-blue-50/50 p-5 rounded-2xl border border-blue-100/50">
+                        <div className="h-10 w-10 bg-blue-100 rounded-xl mb-3 flex items-center justify-center text-blue-500">
+                          <Wind className="w-5 h-5" />
+                        </div>
+                        <div className="h-4 w-20 bg-blue-200/50 rounded mb-2" />
+                        <div className="h-3 w-12 bg-blue-100/50 rounded" />
+                      </div>
+                      <div className="bg-green-50/50 p-5 rounded-2xl border border-green-100/50">
+                        <div className="h-10 w-10 bg-green-100 rounded-xl mb-3 flex items-center justify-center text-green-500">
+                          <Sprout className="w-5 h-5" />
+                        </div>
+                        <div className="h-4 w-20 bg-green-200/50 rounded mb-2" />
+                        <div className="h-3 w-12 bg-green-100/50 rounded" />
+                      </div>
+                    </div>
+
+                    {/* Mock Graph/Bar */}
+                    <div className="bg-gray-50/50 p-5 rounded-2xl border border-gray-100/50 space-y-3">
+                      <div className="flex justify-between text-xs text-gray-400 mb-1">
+                        <span>Analysis</span>
+                        <span>85% Match</span>
+                      </div>
+                      <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full w-[85%] bg-gradient-to-r from-blue-400 to-green-400 rounded-full" />
+                      </div>
+                      <div className="flex gap-2 mt-2">
+                        <div className="h-2 w-16 bg-gray-200 rounded-full" />
+                        <div className="h-2 w-10 bg-gray-100 rounded-full" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Community Impact
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Track your contributions and see state-level rankings
-                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-20 bg-gray-900">
-          <div className="max-w-4xl mx-auto px-6 text-center">
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
-              Ready to Make a Difference?
-            </h2>
-            <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-              Every tree counts. Start by exploring your district's environmental health and contributing to India's green movement.
-            </p>
-            <button
-              onClick={() => setShowAuthModal(true)}
-              className="px-8 py-3.5 bg-white text-gray-900 text-base font-medium rounded-md hover:bg-gray-100 transition-colors"
-            >
-              Sign In to Get Started
-            </button>
+        {/* Improved CTA Section */}
+        <section className="py-20 px-6">
+          <div className="max-w-5xl mx-auto bg-gradient-to-br from-gray-900 to-blue-900 rounded-3xl p-12 text-center text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-5xl font-bold mb-6">
+                Ready to make an impact?
+              </h2>
+              <p className="text-gray-300 text-lg max-w-2xl mx-auto mb-10">
+                Join thousands of citizens using Vayura to monitor their local environment and take verified climate action.
+              </p>
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="px-8 py-4 bg-white text-gray-900 text-lg font-bold rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
+              >
+                Join Vayura Now
+              </button>
+            </div>
           </div>
         </section>
       </div>
