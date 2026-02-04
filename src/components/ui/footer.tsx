@@ -7,10 +7,12 @@ export function Footer() {
   return (
     <footer className="bg-white border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-8">
-
+        <nav
+          aria-label="Footer navigation"
+          className="grid grid-cols-1 md:grid-cols-5 gap-12 md:gap-10"
+        >
           {/* Brand Column */}
-          <div className="md:col-span-1">
+          <div>
             <Link href="/" className="flex items-center gap-2 mb-4">
               <Image
                 src="/logo.png"
@@ -32,13 +34,12 @@ export function Footer() {
               <a
                 href="https://github.com/manasdutta04/vayura"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-gray-900 transition-colors"
                 aria-label="GitHub"
               >
                 <Github className="w-5 h-5" />
               </a>
-
               <a
                 href="https://www.linkedin.com/in/manasdutta04/"
                 target="_blank"
@@ -49,6 +50,38 @@ export function Footer() {
                 <Linkedin className="w-5 h-5" />
               </a>
             </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
+              Quick Links
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  Home
+                </Link>
+              </li>
+
+              <li>
+                <Link href="/about" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  About
+                </Link>
+              </li>
+
+              <li>
+                <Link href="/contact" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  Contact
+                </Link>
+              </li>
+
+              <li>
+                <Link href="/feedback" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  Feedback
+                </Link>
+              </li>
+            </ul>
           </div>
 
           {/* Platform */}
@@ -62,18 +95,6 @@ export function Footer() {
               <li><Link href="/calculator" className="text-sm text-gray-500 hover:text-green-600 transition-colors">CO₂ Calculator</Link></li>
               <li><Link href="/methodology" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Methodology</Link></li>
               <li><Link href="/analytics" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Analytics</Link></li>
-            </ul>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
-              Quick Links
-            </h3>
-            <ul className="space-y-3">
-              <li><Link href="/" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Home</Link></li>
-              <li><Link href="/about" className="text-sm text-gray-500 hover:text-green-600 transition-colors">About</Link></li>
-              <li><Link href="/contact" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -110,7 +131,7 @@ export function Footer() {
             </ul>
           </div>
 
-        </div>
+        </nav>
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-100 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
